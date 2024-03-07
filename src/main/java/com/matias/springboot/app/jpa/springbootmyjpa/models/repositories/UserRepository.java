@@ -1,5 +1,7 @@
 package com.matias.springboot.app.jpa.springbootmyjpa.models.repositories;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -10,6 +12,9 @@ import com.matias.springboot.app.jpa.springbootmyjpa.models.entities.User;
 public interface UserRepository extends CrudRepository<User, Long>{
 
     @Query("select u from User u where u.id = ?1")
-    public User findOne(Long id);
+    public Optional<User> findOne(Long id);
+
+    @Query("select u from User u where u.mail = ?1")
+    public User findByMail(String mail);
 
 }

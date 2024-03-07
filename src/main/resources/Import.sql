@@ -1,6 +1,0 @@
-insert into User(name, last_name, mail) values ('Matias', 'Navio', 'matias2@gmail.com')
-insert into User(name, last_name, mail) values ('Juan', 'Elias', 'juan@gmail.com')
-insert into User(name, last_name, mail) values ('Santiago', 'Federici', 'santiago@gmail.com')
-insert into User(name, last_name, mail) values ('Exequiel', 'Carrizo', 'exequiel@gmail.com')
-insert into User(name, last_name, mail) values ('Giuliano', 'Blengini', 'gordo@gmail.com')
-insert into User(name, last_name, mail) values ('Matias', 'Mondello', 'mondello@gmail.com')
