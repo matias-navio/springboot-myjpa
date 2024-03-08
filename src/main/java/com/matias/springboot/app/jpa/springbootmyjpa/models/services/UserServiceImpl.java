@@ -23,7 +23,7 @@ public class UserServiceImpl implements IUserService{
     }
 
     @Override
-    public Map<String, Object> findById(Long id) {
+    public Map<String, Object> findByIdMap(Long id) {
         Optional<User> userOptional = repository.findOne(id);
         Map<String, Object> data = new HashMap<>();
 
@@ -54,5 +54,10 @@ public class UserServiceImpl implements IUserService{
     @Override
     public User findByMail(String mail) {
         return repository.findByMail(mail);
+    }
+
+    @Override
+    public List<User> saveAll(List<User> users) {
+        return repository.saveAll(users);
     }
 }

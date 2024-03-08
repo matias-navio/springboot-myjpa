@@ -10,7 +10,7 @@ public interface IUserService {
 
     public Optional<User> findOne(Long id);
 
-    public Map<String, Object> findById(Long id);
+    public Map<String, Object> findByIdMap(Long id);
 
     public User findByMail(String mail);
 
@@ -19,5 +19,7 @@ public interface IUserService {
     public User save(User user);
 
     public void deleteById(Long id);
+
+    public List<User> saveAll(List<User> users);
 
 }

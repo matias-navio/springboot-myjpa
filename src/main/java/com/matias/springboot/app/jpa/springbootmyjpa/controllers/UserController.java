@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.matias.springboot.app.jpa.springbootmyjpa.models.entities.User;
@@ -36,7 +38,7 @@ public class UserController {
     @GetMapping("/user/{id}")
     public Map<String, Object> user(@PathVariable Long id){
 
-        return userService.findById(id);
+        return userService.findByIdMap(id);
     }
 
     @Transactional(readOnly = true)
@@ -46,13 +48,18 @@ public class UserController {
         return userService.findOne(id);
     }
 
-    // @Transactional(readOnly = true)
-    // @GetMapping("/mail")
-    // public User user(){
-    //     String mail = "matias@gmail.com"; 
+    @Transactional(readOnly = true)
+    @GetMapping("/mail/{id}")
+    public User userMail(@PathVariable Long id){
+        String mail = "matias@gmail.com";
+        Optional<User> user = userService.findOne(id);
 
-    //     return userService.findByMail(mail);
-    // }
+        if(user.get().getMail().equals(mail)){
+            return userService.findByMail(mail);
+        }
+        //manejar una excepcion
+        return null;
+    }
 
     @Transactional
     @PostMapping("/create")
@@ -73,5 +80,12 @@ public class UserController {
     public User update(@PathVariable Long id,@RequestBody User user){
 
         return userService.save(user);
+    }
+
+    @Transactional
+    @PutMapping("/update-all")
+    public List<User> updateAll(@RequestBody List<User> users){
+
+        return userService.saveAll(users);
     }
 }
