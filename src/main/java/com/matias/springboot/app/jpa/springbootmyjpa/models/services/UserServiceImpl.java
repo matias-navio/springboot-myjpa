@@ -47,17 +47,26 @@ public class UserServiceImpl implements IUserService{
     }
 
     @Override
-    public void deleteById(Long id) {
-        repository.deleteById(id);
+    public Optional<User> deleteById(Long id) {
+        Optional<User> optionalUser = repository.findOne(id);
+
+        optionalUser.ifPresent(user -> {
+            repository.delete(user);
+        });
+        return optionalUser;
     }
 
     @Override
-    public User findByMail(String mail) {
-        return repository.findByMail(mail);
-    }
+    public Optional<User> update(Long id, User user) {
 
-    @Override
-    public List<User> saveAll(List<User> users) {
-        return repository.saveAll(users);
+        Optional<User> optionalUser = repository.findOne(id);
+        optionalUser.ifPresent(userDb -> {
+            userDb.setName(user.getName());
+            userDb.setLastName(user.getLastName());
+            userDb.setMail(user.getMail());
+
+            repository.save(userDb);
+        });
+        return optionalUser;
     }
 }

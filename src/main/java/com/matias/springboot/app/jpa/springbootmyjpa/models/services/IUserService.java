@@ -12,14 +12,12 @@ public interface IUserService {
 
     public Map<String, Object> findByIdMap(Long id);
 
-    public User findByMail(String mail);
-
     public List<User> findAll();
 
     public User save(User user);
 
-    public void deleteById(Long id);
+    public Optional<User> update(Long id, User user);
 
-    public List<User> saveAll(List<User> users);
+    public Optional<User> deleteById(Long id);
 
 }
