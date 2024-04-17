@@ -26,7 +26,7 @@ import com.matias.springboot.app.jpa.springbootmyjpa.validation.UserValidation;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/app")
+@RequestMapping("/app/users")
 public class UserController {
 
     @Autowired
@@ -36,14 +36,14 @@ public class UserController {
     private UserValidation validation;
 
     @Transactional(readOnly = true)
-    @GetMapping("/users")
+    @GetMapping("/list")
     public List<User> userList(){
 
         return userService.findAll();
     }
 
     @Transactional(readOnly = true)
-    @GetMapping("/user2/{id}")
+    @GetMapping("/map/{id}")
     public ResponseEntity<?> user2(@PathVariable Long id){
         Map<String, Object> data = userService.findByIdMap(id);
         if(data.isEmpty()){
@@ -53,8 +53,8 @@ public class UserController {
     }
 
     @Transactional(readOnly = true)
-    @GetMapping("/user/{id}")
-    public ResponseEntity<?> user(@PathVariable Long id){
+    @GetMapping("/{id}")
+    public ResponseEntity<?> user(@Valid @PathVariable Long id){
         Optional<User> optionalUser = userService.findOne(id);
         if(optionalUser.isPresent()){
             return ResponseEntity.status(HttpStatus.CREATED).body(optionalUser.orElseThrow());
@@ -63,16 +63,20 @@ public class UserController {
         return ResponseEntity.badRequest().build();
     }
 
-    @Transactional
-    @PostMapping("/create")
-    public ResponseEntity<?> createUser(@Valid @RequestBody User user, BindingResult result){
+    @PostMapping("/save")
+    public ResponseEntity<?> save(@Valid @RequestBody User user, BindingResult result){
         validation.validate(user, result);
         if(result.hasFieldErrors()){
             return validation(result);
         }
 
-        User userDb = userService.save(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(userDb);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(user));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody User user, BindingResult result){
+        user.setAdmin(false);
+        return save(user, result);
     }
 
     @Transactional

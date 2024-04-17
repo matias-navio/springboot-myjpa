@@ -14,7 +14,7 @@ public interface IUserService {
 
     public List<User> findAll();
 
-    public User save(User user);
+    public User create(User user);
 
     public Optional<User> update(Long id, User user);
 
