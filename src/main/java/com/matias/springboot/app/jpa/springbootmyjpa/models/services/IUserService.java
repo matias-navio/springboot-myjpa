@@ -20,4 +20,6 @@ public interface IUserService {
 
     public Optional<User> deleteById(Long id);
 
+    public boolean existsByUsername(String username);
+
 }

@@ -91,4 +91,9 @@ public class UserServiceImpl implements IUserService{
         });
         return optionalUser;
     }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return  userRepository.existsByUsername(username);
+    }
 }

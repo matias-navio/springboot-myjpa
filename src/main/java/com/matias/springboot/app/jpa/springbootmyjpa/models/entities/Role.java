@@ -1,5 +1,6 @@
 package com.matias.springboot.app.jpa.springbootmyjpa.models.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +17,7 @@ public class Role {
     private Long id;
 
     @NotBlank
+    @Column(unique = true)
     private String name;
 
     public Long getId() {

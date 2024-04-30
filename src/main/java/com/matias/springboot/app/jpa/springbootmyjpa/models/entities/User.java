@@ -4,8 +4,10 @@ package com.matias.springboot.app.jpa.springbootmyjpa.models.entities;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.matias.springboot.app.jpa.springbootmyjpa.validation.ExistByUsername;
 
-    import jakarta.persistence.Entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,9 +35,12 @@ public class User {
     private String lastName;
 
     @NotBlank
+    @Column(unique = true)
     private String mail;
 
+    @ExistByUsername
     @NotBlank
+    @Column(unique = true)
     private String username;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
