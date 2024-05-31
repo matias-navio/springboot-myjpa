@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.matias.springboot.app.jpa.springbootmyjpa.exception.UserNotFoundException;
+import com.matias.springboot.app.jpa.springbootmyjpa.exception.UserListNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,14 +39,18 @@ public class UserController {
 
     @Transactional(readOnly = true)
     @GetMapping("/list")
-    public List<User> userList(){
+    public ResponseEntity<List<User>> userList() throws UserListNotFoundException {
 
-        return userService.findAll();
+        List<User> userList = userService.findAll();
+        if (userList.isEmpty()){
+            throw new UserListNotFoundException("no hay usuarios en la lista");
+        }
+        return ResponseEntity.ok(userList);
     }
 
     @Transactional(readOnly = true)
     @GetMapping("/map/{id}")
-    public ResponseEntity<?> user2(@PathVariable Long id){
+    public ResponseEntity<?> user2(@PathVariable Long id) throws UserNotFoundException{
         Map<String, Object> data = userService.findByIdMap(id);
         if(data.isEmpty()){
             return ResponseEntity.notFound().build();
@@ -54,13 +60,12 @@ public class UserController {
 
     @Transactional(readOnly = true)
     @GetMapping("/{id}")
-    public ResponseEntity<?> user(@Valid @PathVariable Long id){
+    public ResponseEntity<?> user(@Valid @PathVariable Long id) throws UserNotFoundException{
         Optional<User> optionalUser = userService.findOne(id);
-        if(optionalUser.isPresent()){
-            return ResponseEntity.status(HttpStatus.CREATED).body(optionalUser.orElseThrow());
-        }
+        optionalUser.orElseThrow(() ->
+                new UserNotFoundException("Usuario no encontrado"));
 
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(optionalUser);
     }
 
     @PostMapping("/save")
@@ -75,7 +80,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody User user, BindingResult result){
-        user.setAdmin(false);
+        user.setAdmin(true);
         return save(user, result);
     }
 
@@ -99,7 +104,7 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@PathVariable Long id){
         Optional<User> optionalUser = userService.deleteById(id);
         if(optionalUser.isPresent()){
-            return ResponseEntity.status(HttpStatus.CREATED).body(optionalUser.orElseThrow());
+            return ResponseEntity.status(HttpStatus.OK).body(optionalUser.orElseThrow());
         }
         return ResponseEntity.badRequest().build();
     }
